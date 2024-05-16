@@ -16,8 +16,8 @@ from app.core.security.password import (
     get_password_hash,
     verify_password,
 )
-from app.models import RefreshToken, Attorney, Prospect, Lead
-from app.schemas.requests import LeadUpdate, RefreshTokenRequest, AttorneyCreateRequest, ProspectCreateRequest
+from app.models import RefreshToken, Attorney, Lead
+from app.schemas.requests import LeadUpdate, RefreshTokenRequest, AttorneyCreateRequest
 from app.schemas.responses import AccessTokenResponse, AttorneyResponse, LeadInfo
 
 router = APIRouter()
@@ -211,6 +211,7 @@ async def read_current_user(update_form: LeadUpdate, session: AsyncSession = Dep
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=api_messages.PASSWORD_INVALID,
         )    
+    
     updated_lead = await session.scalar(select(Lead).where(Lead.lead_id == update_form.lead_id))
     updated_lead.state = "REACHED_OUT"
     session.add(updated_lead)

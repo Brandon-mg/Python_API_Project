@@ -17,7 +17,7 @@
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import AnyHttpUrl, BaseModel, SecretStr, computed_field
+from pydantic import AnyHttpUrl, BaseModel, EmailStr, SecretStr, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine.url import URL
 from fastapi_mail import ConnectionConfig
@@ -42,24 +42,26 @@ class Database(BaseModel):
     port: int = 5432
     db: str = "postgres"
 
-class ConnectionConfig(BaseModel):
+
+class ConnectionConfig(BaseSettings):
     MAIL_USERNAME: str = "test@example.com"
     MAIL_PASSWORD: SecretStr
-    MAIL_FROM: str
     MAIL_PORT: int = 587
-    MAIL_SERVER: str  = "smtp.gmail.com"
-    MAIL_FROM_NAME: str
-    MAIL_TLS: bool = True
+    MAIL_SERVER: str = "smtp.gmail.com"
     MAIL_SSL: bool = False
+    MAIL_TLS: bool = True
+    MAIL_FROM: EmailStr = "test@example.com"
+    MAIL_FROM_NAME: str = "test app"
+    TEMPLATE_FOLDER: str = "./templates/email.html"
     USE_CREDENTIALS: bool = True
-    TEMPLATE_FOLDER: str = "./templates/email"
+    VALIDATE_CERTS: bool = True
 
 class Settings(BaseSettings):
     security: Security
     database: Database
     mail: ConnectionConfig
     enable_email: bool = False
-    
+
     @computed_field  # type: ignore[misc]
     @property
     def sqlalchemy_database_uri(self) -> URL:
@@ -76,6 +78,7 @@ class Settings(BaseSettings):
         env_file=f"{PROJECT_DIR}/.env",
         case_sensitive=False,
         env_nested_delimiter="__",
+        extra="allow",
     )
 
 

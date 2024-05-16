@@ -8,6 +8,6 @@ async def send_email_async(subject: str, attorney_email: str, prospect_email: st
         body=body,
         subtype='html'
     )
-    fm = FastMail(Settings.mail)
+    fm = FastMail(Settings.conn)
     await fm.send_message(message, template_name="email.html")
 
