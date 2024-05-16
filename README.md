@@ -32,7 +32,35 @@ based off a [minimal version](https://github.com/rafsaf/minimal-fastapi-postgres
 Email is disabled by default but the fucntionality is there, need to attach unsecured e-mail acc to .env file.
 
 ## Endpoints
+AUTH - need auth
+/auth/access-token
+Login Access Token
 
+/auth/refresh-token
+Refresh Token
+
+/auth/register
+Register New Attorney
+
+/users/updatelead
+Update Lead State
+
+USERS - non auth calls
+
+/users/filelead
+File New Lead
+
+/users/getpendingleads
+Get Pending Leads
+
+/users/getreachedleads
+Get Reached Out Leads
+
+/users/getattorneys
+Get Attorneys
+
+/users/getprospects
+Get Prospects
 
 ## Quickstart
 

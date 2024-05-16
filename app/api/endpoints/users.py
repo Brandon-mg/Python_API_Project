@@ -1,41 +1,21 @@
 from sqlite3 import IntegrityError
 from typing import Annotated
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
-from sqlalchemy import asc, delete, select, func
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
-from os import path, getcwd
+from os import getcwd
 from app.api import api_messages, deps
-from app.core.security.password import get_password_hash
 from app.models import Lead, Prospect, Attorney
-from app.schemas.responses import AttorneyResponse, IDList, ProspectResponse
+from app.schemas.responses import IDList, ProspectResponse
 from app.core.send_mail import send_email_async
 from app.core.config import Settings
 
 router = APIRouter()
 
-
-@router.get("/me", response_model=AttorneyResponse, description="Get current user")
-async def read_current_user(
-    current_user: Attorney = Depends(deps.get_current_attorney),
-) -> Attorney:
-    return current_user
-
-@router.delete(
-    "/me",
-    status_code=status.HTTP_204_NO_CONTENT,
-    description="Delete current user",
-)
-async def delete_current_user(
-    current_user: Attorney = Depends(deps.get_current_attorney),
-    session: AsyncSession = Depends(deps.get_session),
-) -> None:
-    await session.execute(delete(Attorney).where(Attorney.attorney_id == current_user.attorney_id))
-    await session.commit()
-
 @router.post(
     "/filelead",
     response_model=ProspectResponse,
-    description="file a new lead",
+    description="File a new lead",
     status_code=status.HTTP_201_CREATED,
 )
 async def register_new_prospect(
@@ -100,7 +80,7 @@ async def register_new_prospect(
 
 
 
-@router.post("/getpendingleads", response_model=IDList, description="get pending leads")
+@router.post("/getpendingleads", response_model=IDList, description="Get pending leads")
 async def read_current_user(session: AsyncSession = Depends(deps.get_session)) -> None:
     q = select(Lead).where(Lead.state == "PENDING")
     leads_list = await session.execute(q)
@@ -111,7 +91,7 @@ async def read_current_user(session: AsyncSession = Depends(deps.get_session)) -
         ret.ids.append(lead.lead_id)
     return ret
 
-@router.post("/getreachedleads", response_model=IDList, description="get reached out leads")
+@router.post("/getreachedleads", response_model=IDList, description="Get reached out leads")
 async def read_current_user(session: AsyncSession = Depends(deps.get_session)) -> None:
     q = select(Lead).where(Lead.state == "REACHED_OUT")
     leads_list = await session.execute(q)
@@ -123,7 +103,7 @@ async def read_current_user(session: AsyncSession = Depends(deps.get_session)) -
     return ret
 
 
-@router.post("/getattorneys", response_model=IDList, description="get reached out leads")
+@router.post("/getattorneys", response_model=IDList, description="Get attorneys")
 async def read_current_user(session: AsyncSession = Depends(deps.get_session)) -> None:
     q = select(Attorney)
     attorneys_list = await session.execute(q)
@@ -134,7 +114,7 @@ async def read_current_user(session: AsyncSession = Depends(deps.get_session)) -
         ret.ids.append(attorney.attorney_id)
     return ret
 
-@router.post("/getprospects", response_model=IDList, description="get reached out leads")
+@router.post("/getprospects", response_model=IDList, description="Get prospects")
 async def read_current_user(session: AsyncSession = Depends(deps.get_session)) -> None:
     q = select(Prospect)
     prospects_list = await session.execute(q)

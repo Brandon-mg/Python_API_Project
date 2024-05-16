@@ -16,11 +16,12 @@
 
 from functools import lru_cache
 from pathlib import Path
+from typing import Any, List
 
-from pydantic import AnyHttpUrl, BaseModel, EmailStr, SecretStr, computed_field
+from fastapi_mail import ConnectionConfig
+from pydantic import AnyHttpUrl, BaseModel, DirectoryPath, EmailStr, SecretStr, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine.url import URL
-from fastapi_mail import ConnectionConfig
 
 PROJECT_DIR = Path(__file__).parent.parent.parent
 
@@ -42,25 +43,13 @@ class Database(BaseModel):
     port: int = 5432
     db: str = "postgres"
 
+class EmailSchema(BaseModel):
+    email: List[EmailStr]
 
-class ConnectionConfig(BaseSettings):
-    MAIL_USERNAME: str = "test@example.com"
-    MAIL_PASSWORD: SecretStr
-    MAIL_PORT: int = 587
-    MAIL_SERVER: str = "smtp.gmail.com"
-    MAIL_SSL: bool = False
-    MAIL_TLS: bool = True
-    MAIL_FROM: EmailStr = "test@example.com"
-    MAIL_FROM_NAME: str = "test app"
-    TEMPLATE_FOLDER: str = "./templates/email.html"
-    USE_CREDENTIALS: bool = True
-    VALIDATE_CERTS: bool = True
 
 class Settings(BaseSettings):
     security: Security
     database: Database
-    mail: ConnectionConfig
-    enable_email: bool = False
 
     @computed_field  # type: ignore[misc]
     @property

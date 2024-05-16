@@ -1,5 +1,5 @@
-from config import Settings
-from fastapi_mail import FastMail, MessageSchema
+from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
+
 
 async def send_email_async(subject: str, attorney_email: str, prospect_email: str, body: dict):
     message = MessageSchema(
@@ -8,6 +8,6 @@ async def send_email_async(subject: str, attorney_email: str, prospect_email: st
         body=body,
         subtype='html'
     )
-    fm = FastMail(Settings.conn)
+    fm = FastMail(ConnectionConfig(MAIL_USERNAME = "username", MAIL_PASSWORD = "**********", MAIL_PORT = 587, MAIL_SERVER = "mail server", MAIL_SSL_TLS = False))
     await fm.send_message(message, template_name="email.html")
 
