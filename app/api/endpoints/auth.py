@@ -196,7 +196,7 @@ async def register_new_attorney(
 
 @router.post("/updatelead", response_model=LeadInfo, description="Update Lead")
 async def read_current_user(update_form: LeadUpdate, session: AsyncSession = Depends(deps.get_session)) -> None:
-    user = await session.scalar(select(Attorney).where(Attorney.email == update_form.username))
+    user = await session.scalar(select(Attorney).where(Attorney.email == update_form.email))
     if user is None:
         # this is naive method to not return early
         verify_password(update_form.password, DUMMY_PASSWORD)

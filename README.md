@@ -151,6 +151,7 @@ returns
 ### 2. File Lead and Prospect
 you'll need to use a multipart post app like [Bruno](https://www.usebruno.com/) or [Postman](https://www.postman.com/downloads/)
 
+You can also run the test_file_upload.py and edit the values in it 
 
 returns
 ```bash
@@ -162,10 +163,92 @@ returns
 }
 ```
 ### 3. Check PENDING and REACHED_OUT leads
+Check leads in PENDING state
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/users/getpendingleads' \
+  -H 'accept: application/json' \
+  -d ''
+```
+
+returns
+
+```bash
+{
+  "ids": [
+    "a430f9ec-908d-4b51-9948-03684762576c",
+    "6cce44f8-f6c9-4e27-a898-ad48354fc34f"
+  ]
+}
+```
+
+Check leads in REACHED_OUT state
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/users/getreachedleads' \
+  -H 'accept: application/json' \
+  -d ''
+```
+
+should return empty if no leads were updated
 
 
 ### 4. Check and Update Lead Status
+Update a lead to reached out,needs valid email, password, and lead id
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/auth/updatelead' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "email": "user@example.com",
+  "password": "string",
+  "lead_id": "a430f9ec-908d-4b51-9948-03684762576c"
+}'
+```
 
+returns
+```bash
+{
+  "prospect_id": "dc548bb3-fcac-4f8e-bd7c-4001f5955fb7",
+  "attorney_id": "41862d97-1533-4e12-a8ed-0e030259f168",
+  "lead_id": "a430f9ec-908d-4b51-9948-03684762576c",
+  "state": "REACHED_OUT"
+}
+```
+
+Should be able to run 
+Check leads in REACHED_OUT state
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/users/getreachedleads' \
+  -H 'accept: application/json' \
+  -d ''
+```
+
+to get the updated lead now
+```bash
+{
+  "ids": [
+    "a430f9ec-908d-4b51-9948-03684762576c"
+  ]
+}
+```
+
+
+### 5. Get Attorney and Prospect ids
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/users/getattorneys' \
+  -H 'accept: application/json' \
+  -d ''
+
+curl -X 'POST' \
+  'http://127.0.0.1:8000/users/getprospects' \
+  -H 'accept: application/json' \
+  -d ''
+```
 
 ## License
 
