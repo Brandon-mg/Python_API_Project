@@ -37,6 +37,19 @@ This project is for a take home project that required FastAPI to set up a backen
 based off a [minimal version](https://github.com/rafsaf/minimal-fastapi-postgres-template)  of the [full stack fast api template](https://github.com/tiangolo/full-stack-fastapi-template)
 Email is disabled by default. To enable you need to enable the flag in app/core/send_mail.py and put in the credentials for an unsecured (no 2fa, access to less secure apps) e-mail acc.
 
+### Core Goals
+
+#### Key requirements
+- [x] Accept prospect firstname, lastname, email, resume/cv file (public)
+- [x] Assign lead to attorney and send email
+- [x] Allow getting list of leads
+- [x] Allow authed attorney to update lead from PENDING to REACHED_OUT
+
+#### Additional requirements for functionality
+- [x] Create attorney account
+- [x] Auth attorney
+- [x] Save resume file
+
 ## Endpoints
 AUTH - need auth
 /auth/access-token
