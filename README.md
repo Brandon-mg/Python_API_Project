@@ -75,21 +75,21 @@ git clone https://github.com/Brandon-mg/Python_API_Project.git
 ```bash
 cd your_project_name
 
-### Poetry install (python3.12)
+### Poetry install
 poetry install
 ```
 
-### 3. Setup database and migrations
+### 3. Setup database and Alembic migrations
 
 ```bash
 ### Setup database
 docker-compose up -d
 
-### Run Alembic migrations
+### Run Alembic
 alembic upgrade head
 ```
 
-### 4. Now you can run app
+### 4. Run Uvicorn
 
 ```bash
 ### And this is it:
@@ -97,7 +97,7 @@ uvicorn app.main:app --reload
 
 ```
 
-### 5. Running tests
+### 5. Running Tests
 
 go to `http://127.0.0.1:8000/` and use the GUI to run basic API tests and see outputs easier
 
@@ -111,10 +111,56 @@ or use the test python scripts to run everything at once
 
 ### 1. Create Attorney account
 
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/auth/register' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "name": "string",
+  "email": "user@example.com",
+  "password": "string"
+}'
+```
+
+returns
+```bash
+{
+  "attorney_id": "41862d97-1533-4e12-a8ed-0e030259f168",
+  "email": "user@example.com"
+}
+```
+
+check list of attorneys using 
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/users/getattorneys' \
+  -H 'accept: application/json' \
+  -d ''
+```
+
+returns
+```bash
+{
+  "ids": [
+    "41862d97-1533-4e12-a8ed-0e030259f168"
+  ]
+}
+```
 
 ### 2. File Lead and Prospect
+you'll need to use a multipart post app like [Bruno](https://www.usebruno.com/) or [Postman](https://www.postman.com/downloads/)
 
 
+returns
+```bash
+{
+  "prospect_id": "dc548bb3-fcac-4f8e-bd7c-4001f5955fb7",
+  "attorney_id": "41862d97-1533-4e12-a8ed-0e030259f168",
+  "email": "user123@example.com",
+  "lead_id": "a430f9ec-908d-4b51-9948-03684762576c"
+}
+```
 ### 3. Check PENDING and REACHED_OUT leads
 
 

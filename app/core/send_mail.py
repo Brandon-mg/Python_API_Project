@@ -1,7 +1,9 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 
-
+enable_email = False
 async def send_email_async(subject: str, attorney_email: str, prospect_email: str, body: dict):
+    if not enable_email:
+        return
     message = MessageSchema(
         subject=subject,
         recipients=[attorney_email, prospect_email],

@@ -26,14 +26,14 @@ async def register_new_prospect(
 ) -> ProspectResponse:
     user = await session.scalar(select(Prospect).where(Prospect.email == email))
     if user is None:
-        file_path = getcwd()+"/app/resume/"+file.filename
+        file_path = getcwd()+"/resume/"+name+"_"+file.filename
         with open(file_path, "wb") as f:
             f.write(file.file.read())
             f.close
         user = Prospect(
             email=email,
             name=name,
-            resume=file_path
+            resume=name+"_"+file.filename
         )
         session.add(user)
         try:
@@ -45,6 +45,10 @@ async def register_new_prospect(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=api_messages.EMAIL_ADDRESS_ALREADY_USED,
             )
+    else:
+        with open(getcwd()+"/resume/"+user.resume, "wb") as f:
+            f.write(file.file.read())
+            f.close
     #attorney_id = await session.scalar(select(Attorney))
     id_tuple = await session.scalar(select(Prospect).where(Prospect.email == email)), await session.scalar(select(Attorney).order_by(func.random()).limit(1))
 
@@ -65,14 +69,13 @@ async def register_new_prospect(
             detail=api_messages.EMAIL_ADDRESS_ALREADY_USED,
         )
     ret = ProspectResponse(
-        prospect_id = id_tuple[0],
-        attorney_id = id_tuple[1],
+        prospect_id = lead.prospect_id,
+        attorney_id = lead.attorney_id,
         lead_id = lead.lead_id,
         email = user.email
     )
 
-    if Settings.enable_email:
-        await send_email_async("New Lead Pair", id_tuple[1].email, id_tuple[0].email, {'title': f"{user.name} has a new lead attached to {id_tuple[1].name}, id:{lead.lead_id}", 'data': f"status for lead {lead.lead_id} is {lead.state}."})
+    await send_email_async("New Lead Pair", id_tuple[1].email, id_tuple[0].email, {'title': f"{user.name} has a new lead attached to {id_tuple[1].name}, id:{lead.lead_id}", 'data': f"status for lead {lead.lead_id} is {lead.state}."})
 
     return ret
 
