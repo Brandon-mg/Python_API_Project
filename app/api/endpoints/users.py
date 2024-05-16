@@ -14,6 +14,7 @@ router = APIRouter()
 
 # File Lead API Endpoint. Takes multipart form for File, lname, fname, email
 # Creates a prospect record and a lead record
+# Saves the file uploaded in the app/resumes folder
 # Gets random attorney in attorney table to assign to lead
 # Then runs the Email func with data
 

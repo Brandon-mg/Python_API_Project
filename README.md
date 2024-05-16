@@ -160,6 +160,8 @@ you'll need to use a multipart post app like [Bruno](https://www.usebruno.com/) 
 
 You can also run the test_file_upload.py and edit the values in it 
 
+The file uploaded can be found at app/resume
+
 returns
 ```bash
 {
