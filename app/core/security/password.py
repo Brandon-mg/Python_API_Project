@@ -1,7 +1,6 @@
 import bcrypt
 
 from app.core.config import get_settings
-from typing import BinaryIO
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return bcrypt.checkpw(

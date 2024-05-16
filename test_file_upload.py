@@ -9,7 +9,8 @@ upload_url = 'http://127.0.0.1:8000/users/filelead'
 
 # Prepare the multipart/form-data payload
 fields = {
-    'name': 'string',  
+    'fname': 'string',  
+    'lname': 'string', 
     'email': 'userA@example.com',
     'file': ('filename.txt', open(file_path, 'rb').read(), 'text/plain')
 }

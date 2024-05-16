@@ -16,10 +16,9 @@
 
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, List
+from typing import List
 
-from fastapi_mail import ConnectionConfig
-from pydantic import AnyHttpUrl, BaseModel, DirectoryPath, EmailStr, SecretStr, computed_field
+from pydantic import AnyHttpUrl, BaseModel, EmailStr, SecretStr, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine.url import URL
 

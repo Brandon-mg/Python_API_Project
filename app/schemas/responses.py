@@ -1,11 +1,7 @@
 from pydantic import BaseModel, ConfigDict, EmailStr
 
-from app.models import Lead
-
-
 class BaseResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-
 
 class AccessTokenResponse(BaseResponse):
     token_type: str = "Bearer"
@@ -14,11 +10,9 @@ class AccessTokenResponse(BaseResponse):
     refresh_token: str
     refresh_token_expires_at: int
 
-
 class AttorneyResponse(BaseResponse):
     attorney_id: str
     email: EmailStr
-
 
 class ProspectResponse(BaseResponse):
     prospect_id: str

@@ -4,14 +4,20 @@
 
 - [async FastAPI + PostgreSQL app](#async-fastapi--postgresql-app)
   - [Libraries + Tools](#libraries--tools)
-  - [Quickstart](#quickstart)
-    - [1. Create repository from a template](#1-create-repository-from-a-template)
-    - [2. Install dependecies with Poetry](#2-install-dependecies-with-poetry)
-    - [3. Setup database and migrations](#3-setup-database-and-migrations)
-    - [4. Now you can run app](#4-now-you-can-run-app)
-    - [5. Activate pre-commit](#5-activate-pre-commit)
-    - [6. Running tests](#6-running-tests)
   - [About](#about)
+  - [Endpoints](#endpoints)
+  - [Quickstart](#quickstart)
+    - [1. Clone Repo](#1-clone-repo)
+    - [2. Install dependecies](#2-install-dependecies)
+    - [3. Setup database and Alembic migrations](#3-setup-database-and-alembic-migrations)
+    - [4. Run Uvicorn](#4-run-uvicorn)
+    - [5. Running tests](#5-running-tests)
+  - [Step by step example - POST and GET endpoints](#step-by-step-example---post-and-get-endpoints)
+    - [1. Create Attorney account](#1-create-attorney-account)
+    - [2. File Lead and Prospect](#2-file-lead-and-prospect)
+    - [3. Check PENDING and REACHED_OUT leads](#3-check-pending-and-reached_out-leads)
+    - [4. Check and Update Lead Status](#4-check-and-update-lead-status)
+    - [5. Get Attorney and Prospect ids](#5-get-attorney-and-prospect-ids)
   - [License](#license)
 
 
@@ -29,7 +35,7 @@
 
 This project is for a take home project that required FastAPI to set up a backend app to make API calls, send e-mails, and make database queries.
 based off a [minimal version](https://github.com/rafsaf/minimal-fastapi-postgres-template)  of the [full stack fast api template](https://github.com/tiangolo/full-stack-fastapi-template)
-Email is disabled by default but the fucntionality is there, need to attach unsecured e-mail acc to .env file.
+Email is disabled by default. To enable you need to enable the flag in app/core/send_mail.py and put in the credentials for an unsecured (no 2fa, access to less secure apps) e-mail acc.
 
 ## Endpoints
 AUTH - need auth
@@ -100,6 +106,7 @@ uvicorn app.main:app --reload
 ### 5. Running Tests
 
 go to `http://127.0.0.1:8000/` and use the GUI to run basic API tests and see outputs easier
+for file upload you can try [Bruno](https://www.usebruno.com/) or [Postman](https://www.postman.com/downloads/) or use the test_file_upload.py
 
 <br>
 

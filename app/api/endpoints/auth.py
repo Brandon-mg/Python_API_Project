@@ -59,6 +59,7 @@ REFRESH_TOKEN_RESPONSES: dict[int | str, dict[str, Any]] = {
     },
 }
 
+# Access token endpoint that takes the email and password and generates a jwt token and attaches it to the session
 
 @router.post(
     "/access-token",
@@ -104,6 +105,7 @@ async def login_access_token(
         refresh_token_expires_at=refresh_token.exp,
     )
 
+# Refresh token endpoint as part of JWT refresh specs
 
 @router.post(
     "/refresh-token",
@@ -157,7 +159,7 @@ async def refresh_token(
         refresh_token_expires_at=refresh_token.exp,
     )
 
-
+# Register Attorney Endpoint creates a new record with the attorney details sent in
 @router.post(
     "/register",
     response_model=AttorneyResponse,
@@ -194,6 +196,8 @@ async def register_new_attorney(
 
     return user
 
+# Update Lead endpoint that takes the attorney login creds, can be swapped to session token check if the app session was made persistent.
+# Checks valid login, then tries to grab the lead and update it
 @router.post("/updatelead", response_model=LeadInfo, description="Update Lead")
 async def read_current_user(update_form: LeadUpdate, session: AsyncSession = Depends(deps.get_session)) -> None:
     user = await session.scalar(select(Attorney).where(Attorney.email == update_form.email))
@@ -209,11 +213,16 @@ async def read_current_user(update_form: LeadUpdate, session: AsyncSession = Dep
     if not verify_password(update_form.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=api_messages.PASSWORD_INVALID,
+            detail=api_messages.NO_VALID_ATTORNEY_FOUND,
         )    
     
-    updated_lead = await session.scalar(select(Lead).where(Lead.lead_id == update_form.lead_id))
-    updated_lead.state = "REACHED_OUT"
-    session.add(updated_lead)
+    lead = await session.scalar(select(Lead).where(Lead.lead_id == update_form.lead_id))
+    if lead is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=api_messages.ERROR_CREATING_LEAD,
+        )
+    lead.state = "REACHED_OUT"
+    session.add(lead)
     await session.commit()
-    return updated_lead
+    return lead
