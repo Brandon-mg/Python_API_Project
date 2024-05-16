@@ -34,14 +34,14 @@ async def register_new_prospect(
     name=f"{fname} {lname}"
     user = await session.scalar(select(Prospect).where(Prospect.email == email))
     if user is None:
-        file_path = getcwd()+"/resume/"+name+"_"+file.filename
+        file_path = getcwd()+"\\app\\resume\\"+fname+"_"+lname+"_"+file.filename
         with open(file_path, "wb") as f:
             f.write(file.file.read())
             f.close
         user = Prospect(
             email=email,
             name=name,
-            resume=name+"_"+file.filename
+            resume=fname+"_"+lname+"_"+file.filename
         )
         session.add(user)
         try:
@@ -54,7 +54,7 @@ async def register_new_prospect(
                 detail=api_messages.EMAIL_ADDRESS_ALREADY_USED,
             )
     else:
-        with open(getcwd()+"/resume/"+user.resume, "wb") as f:
+        with open(getcwd()+"\\app\\resume\\"+user.resume, "wb") as f:
             f.write(file.file.read())
             f.close
     

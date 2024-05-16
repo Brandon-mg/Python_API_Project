@@ -78,6 +78,8 @@ git clone https://github.com/Brandon-mg/Python_API_Project.git
 
 ### 2. Install dependecies 
 
+Use poetry to setup venv and install dependencies
+
 ```bash
 cd your_project_name
 
@@ -87,15 +89,33 @@ poetry install
 
 ### 3. Setup database and Alembic migrations
 
+Make a .env using the example or use
+
+```bash
+cp .env.example .env
+```
+
+Spin up the docker for db
+Local only runs database as container, but the dockerfile has scripts for running the py app
+
 ```bash
 ### Setup database
 docker-compose up -d
 
-### Run Alembic
+### Run Alembic migration
 alembic upgrade head
 ```
 
+You can clean the db by deleting the volumes and images from docker or run alembic downgrade to drop tables and then run the upgrade head to make fresh tables
+
+```bash
+### Run Alembic cleanup
+alembic downgrade base
+```
+
 ### 4. Run Uvicorn
+
+Run the app
 
 ```bash
 ### And this is it:
@@ -105,16 +125,16 @@ uvicorn app.main:app --reload
 
 ### 5. Running Tests
 
-go to `http://127.0.0.1:8000/` and use the GUI to run basic API tests and see outputs easier
-for file upload you can try [Bruno](https://www.usebruno.com/) or [Postman](https://www.postman.com/downloads/) or use the test_file_upload.py
+Go to `http://127.0.0.1:8000/` and use the GUI to run basic API tests and see outputs easier
+For file upload you can try [Bruno](https://www.usebruno.com/) or [Postman](https://www.postman.com/downloads/) or use the test_file_upload.py
 
 <br>
 
 ## Step by step example - POST and GET endpoints
 
-you can use FastAPIs in built dev dashboard to test all endpoints except the email and the file upload
-for file upload you can use an app like Bruno or Postman and post a multipart form with 'name', 'email', and 'file'
-or use the test python scripts to run everything at once
+You can use FastAPIs in built dev dashboard to test all endpoints.
+For file upload you can also use an app like [Bruno](https://www.usebruno.com/) or [Postman](https://www.postman.com/downloads/) and post a multipart form with 'fname', 'lname', 'email', and 'file'
+
 
 ### 1. Create Attorney account
 
@@ -156,11 +176,11 @@ returns
 ```
 
 ### 2. File Lead and Prospect
-you'll need to use a multipart post app like [Bruno](https://www.usebruno.com/) or [Postman](https://www.postman.com/downloads/)
-
 You can also run the test_file_upload.py and edit the values in it 
 
 The file uploaded can be found at app/resume
+
+The email debug print statement will send in the console
 
 returns
 ```bash
